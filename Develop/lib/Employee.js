@@ -24,6 +24,8 @@ class Employee {
     }
 }
 
-var dude = new Employee('Bob', 10, 'dudemyemail@mail.com')
-console.log(dude.getEmail());
-console.log(dude.getRole());
+const e = new Employee();
+
+
+// Exporting Employee module.
+module.exports = Employee;
