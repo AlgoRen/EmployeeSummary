@@ -9,13 +9,15 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+// List of team members to be rendered to page.
 const teamMembers = [];
 
-function Start() {
+// Starting Prompt
+function Start() { // Starts with creating a manager.
     function CreateManager() {
         inquirer
             .prompt([
-                { // Prompt for Manager name.
+                { // Prompt for Manager's name.
                 type: "input",
                 name: "name",
                 message: "What is your name?",
@@ -26,7 +28,7 @@ function Start() {
                     return "Please enter at least one character."
                 }
             }, 
-            { // Prompt for Manager id.
+            { // Prompt for Manager's id.
                 type: "input",
                 name: "id",
                 message: "What is your id?",
@@ -37,7 +39,7 @@ function Start() {
                     return "Please enter at least one character."
                 }
             },
-            { // Prompt for Manager email.
+            { // Prompt for Manager's email.
                 type: "input",
                 name: "email",
                 message: "What is your email?",
@@ -48,7 +50,7 @@ function Start() {
                     return "Please enter at least one character."
                 }
             },
-            { // Prompt for Manager office;
+            { // Prompt for Manager's office number.
                 type: "input",
                 name: "officeNumber",
                 message: "What is your office number?",
@@ -68,6 +70,129 @@ function Start() {
             );
             teamMembers.push(manager);
             console.log(teamMembers);
+            // Run prompt to add another member.
+            createTeam();
+        });
+    }
+    // Creating prompt for Engineer.
+    function CreateEngineer() {
+        inquirer
+            .prompt([
+                { // Prompt for Engineer's name.
+                type: "input",
+                name: "name",
+                message: "What is your name?",
+                validate: (answer) => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                    return "Please enter at least one character."
+                }
+            }, 
+            { // Prompt for Engineer's id.
+                type: "input",
+                name: "id",
+                message: "What is your id?",
+                validate: (answer) => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                    return "Please enter at least one character."
+                }
+            },
+            { // Prompt for Engineer's email.
+                type: "input",
+                name: "email",
+                message: "What is your email?",
+                validate: (answer) => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                    return "Please enter at least one character."
+                }
+            },
+            { // Prompt for Engineer's GitHub;
+                type: "input",
+                name: "github",
+                message: "What is your GitHub username?",
+                validate: (answer) => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                    return "Please enter at least one character."
+                }
+            } // Pushing results into Engineer constructor.
+        ]).then(function(answers) {
+            const engineer = new Engineer(
+                answers.name,
+                answers.id,
+                answers.email,
+                answers.github
+            );
+            teamMembers.push(engineer);
+            console.log(teamMembers);
+            // Run prompt to add another member.
+            createTeam();
+        });
+    }
+     // Creating prompt for Intern.
+     function CreateIntern() {
+        inquirer
+            .prompt([
+                { // Prompt for Intern's name.
+                type: "input",
+                name: "name",
+                message: "What is your name?",
+                validate: (answer) => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                    return "Please enter at least one character."
+                }
+            }, 
+            { // Prompt for Intern's id.
+                type: "input",
+                name: "id",
+                message: "What is your id?",
+                validate: (answer) => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                    return "Please enter at least one character."
+                }
+            },
+            { // Prompt for Intern's email.
+                type: "input",
+                name: "email",
+                message: "What is your email?",
+                validate: (answer) => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                    return "Please enter at least one character."
+                }
+            },
+            { // Prompt for Intern's School;
+                type: "input",
+                name: "school",
+                message: "What is your school name?",
+                validate: (answer) => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                    return "Please enter at least one character."
+                }
+            } // Pushing results into Intern constructor.
+        ]).then(function(answers) {
+            const intern = new Intern(
+                answers.name,
+                answers.id,
+                answers.email,
+                answers.school 
+            );
+            teamMembers.push(intern);
+            console.log(teamMembers);
+            // Run prompt to add another member.
             createTeam();
         });
     }
@@ -78,21 +203,21 @@ function Start() {
                 type: "list",
                 name: "role",
                 message: "What kind of employee would you like to add?",
-                choices: ["Engineer", "Intern", "Done"]
-            },
+                choices: ["Engineer", "Intern", "Done"] 
+            }, // Prompt choices are Engineer, Intern, and Done; which ends prompts.
         ])
         .then(function(answers) {
             switch (answers.role) {
                 case "Engineer": 
-                    addEngineer();
+                    CreateEngineer();
                     break;
                 case "Intern":
-                    addIntern();
+                    CreateIntern();
                     break;
                 default: renderTeam();
             }
         });
-    } // Functionality for Engineer and Intern prompts.
+    } // Functionality for rendering prompt results and writing a new file.
 
     // Rendering results 
     function renderTeam() {
@@ -104,45 +229,5 @@ function Start() {
 
     CreateManager();
 }
-
+// Start function call. Runs entire program with node app.
 Start()
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
-
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-
-
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// const asyncWriteFile = util.promisify(fs.writeFile);
-
-// async function makeReadMe() {
-//     try {
-//         const response = await inquirer.prompt(Questions);
-//         // basically the real writing of the file
-//         await asyncWriteFile("README.md", render(response));
-//         console.log("Success!");
-//     }
-//     catch(error) {
-//         console.log(error)
-//     }
-// }
-
-// makeReadMe();
