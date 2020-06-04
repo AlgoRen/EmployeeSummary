@@ -3,18 +3,18 @@
 // Use object to hold data from inquirer prompt instances.
 
 // Import Employee Module
-const Employee = require("../lib/Employee");
+const Employee = require("./Employee");
 // Extending Employee with Manager class.
 class Intern extends Employee {
     constructor(name, id, email, school) {
         super(name, id, email);
         this.school = school;
     }
-    getRole() {
-        return 'Intern';
-    }
     getSchool() {
         return this.school;
+    }
+    getRole() {
+        return 'Intern';
     }
 }
 

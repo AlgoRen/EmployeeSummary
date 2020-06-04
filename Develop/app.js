@@ -9,15 +9,103 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const teamMembers = [];
 
+function Start() {
+    function CreateManager() {
+        inquirer
+            .prompt([
+                { // Prompt for Manager name.
+                type: "input",
+                name: "name",
+                message: "What is your name?",
+                validate: (answer) => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                    return "Please enter at least one character."
+                }
+            }, 
+            { // Prompt for Manager id.
+                type: "input",
+                name: "id",
+                message: "What is your id?",
+                validate: (answer) => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                    return "Please enter at least one character."
+                }
+            },
+            { // Prompt for Manager email.
+                type: "input",
+                name: "email",
+                message: "What is your email?",
+                validate: (answer) => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                    return "Please enter at least one character."
+                }
+            },
+            { // Prompt for Manager office;
+                type: "input",
+                name: "officeNumber",
+                message: "What is your office number?",
+                validate: (answer) => {
+                    if (answer !== "") {
+                        return true;
+                    }
+                    return "Please enter at least one character."
+                }
+            } // Pushing results into Manager constructor.
+        ]).then(function(answers) {
+            const manager = new Manager(
+                answers.name,
+                answers.id,
+                answers.email,
+                answers.officeNumber
+            );
+            teamMembers.push(manager);
+            console.log(teamMembers);
+            createTeam();
+        });
+    }
+    // Creating createTeam function.
+    function createTeam() {
+        inquirer.prompt([
+            { // Prompt for role type.
+                type: "list",
+                name: "role",
+                message: "What kind of employee would you like to add?",
+                choices: ["Engineer", "Intern", "Done"]
+            },
+        ])
+        .then(function(answers) {
+            switch (answers.role) {
+                case "Engineer": 
+                    addEngineer();
+                    break;
+                case "Intern":
+                    addIntern();
+                    break;
+                default: renderTeam();
+            }
+        });
+    } // Functionality for Engineer and Intern prompts.
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
+    // Rendering results 
+    function renderTeam() {
+        if (!fs.existsSync(OUTPUT_DIR)){
+            fs.mkdirSync(OUTPUT_DIR);
+        }
+        fs.writeFileSync(outputPath, render(teamMembers), "utf-8");
+    }
 
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
+    CreateManager();
+}
 
+Start()
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
 // `output` folder. You can use the variable `outputPath` above target this location.
@@ -33,3 +121,28 @@ const render = require("./lib/htmlRenderer");
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
+
+// Write code to use inquirer to gather information about the development team members,
+// and to create objects for each team member (using the correct classes as blueprints!)
+
+
+
+// After the user has input all employees desired, call the `render` function (required
+// above) and pass in an array containing all employee objects; the `render` function will
+// generate and return a block of HTML including templated divs for each employee!
+
+// const asyncWriteFile = util.promisify(fs.writeFile);
+
+// async function makeReadMe() {
+//     try {
+//         const response = await inquirer.prompt(Questions);
+//         // basically the real writing of the file
+//         await asyncWriteFile("README.md", render(response));
+//         console.log("Success!");
+//     }
+//     catch(error) {
+//         console.log(error)
+//     }
+// }
+
+// makeReadMe();
